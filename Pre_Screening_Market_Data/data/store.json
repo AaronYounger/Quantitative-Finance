@@ -1,0 +1,392 @@
+{
+  "indicators": {
+    "cost.sma_close_20": {
+      "id": "cost.sma_close_20",
+      "input": "close",
+      "min_bars_required": 20,
+      "outputs": [
+        "value"
+      ],
+      "params": {
+        "period": 20
+      },
+      "requiredBars": 20,
+      "scope": "asset",
+      "source": "close",
+      "type": "SMA"
+    },
+    "cost.sma_close_50": {
+      "id": "cost.sma_close_50",
+      "input": "close",
+      "min_bars_required": 50,
+      "outputs": [
+        "value"
+      ],
+      "params": {
+        "period": 50
+      },
+      "requiredBars": 50,
+      "scope": "asset",
+      "source": "close",
+      "type": "SMA"
+    },
+    "sma20": {
+      "input": "close",
+      "params": {
+        "period": 20
+      },
+      "type": "SMA"
+    },
+    "sma_nvda": {
+      "input": "close",
+      "params": {
+        "period": 20
+      },
+      "type": "SMA"
+    }
+  },
+  "saved_tickers": [
+    "AAPL",
+    "NVDA",
+    "COST"
+  ],
+  "strategies": {
+    "appl_strategy": {
+      "entry": {
+        "left": {
+          "ref": "sma20"
+        },
+        "op": "GT",
+        "right": {
+          "ref": "sma50"
+        }
+      },
+      "execution": {
+        "edge_trigger": true,
+        "max_orders": 5000,
+        "position_size_pct": 0.95,
+        "warmup_bars": 60
+      },
+      "exit": {
+        "left": {
+          "ref": "sma50"
+        },
+        "op": "LT",
+        "right": {
+          "ref": "sma20"
+        }
+      },
+      "indicators": [
+        {
+          "id": "sma20",
+          "input": "close",
+          "params": {
+            "period": 20
+          },
+          "type": "SMA"
+        },
+        {
+          "id": "sma50",
+          "input": "close",
+          "params": {
+            "period": 50
+          },
+          "type": "SMA"
+        }
+      ]
+    },
+    "colins_strategy": {
+      "entry": {
+        "left": {
+          "ref": "sma20"
+        },
+        "op": "GT",
+        "right": {
+          "ref": "sma50"
+        }
+      },
+      "execution": {
+        "edge_trigger": true,
+        "max_orders": 5000,
+        "position_size_pct": 0.95,
+        "warmup_bars": 60
+      },
+      "exit": {
+        "left": {
+          "ref": "sma20"
+        },
+        "op": "LT",
+        "right": {
+          "ref": "sma50"
+        }
+      },
+      "indicators": [
+        {
+          "id": "sma20",
+          "input": "close",
+          "params": {
+            "period": 20
+          },
+          "type": "SMA"
+        },
+        {
+          "id": "sma50",
+          "input": "close",
+          "params": {
+            "period": 50
+          },
+          "type": "SMA"
+        }
+      ]
+    },
+    "cost_strategy": {
+      "backtestConfig": {
+        "commission": {
+          "model": "percent_notional",
+          "value": 0.0005
+        },
+        "executionTiming": "signal_close_fill_next_open",
+        "forceRefresh": false,
+        "longOnly": true,
+        "mode": "single",
+        "multiMode": "batch",
+        "priceInterval": "1d",
+        "pricePeriod": "1y",
+        "slippageBps": 2.0,
+        "useAdjusted": true
+      },
+      "entry": {
+        "left": {
+          "ref": "cost.sma_close_20.value"
+        },
+        "op": "GT",
+        "right": {
+          "ref": "cost.sma_close_50.value"
+        }
+      },
+      "execution": {
+        "edge_trigger": true,
+        "max_orders": 5000,
+        "position_size_pct": 0.95,
+        "warmup_bars": 50
+      },
+      "exit": {
+        "left": {
+          "ref": "cost.sma_close_20.value"
+        },
+        "op": "LT",
+        "right": {
+          "ref": "cost.sma_close_50.value"
+        }
+      },
+      "indicatorDefinitions": [
+        {
+          "id": "cost.sma_close_20",
+          "outputs": [
+            "value"
+          ],
+          "params": {
+            "period": 20
+          },
+          "requiredBars": 20,
+          "scope": "asset",
+          "source": "close",
+          "type": "SMA"
+        },
+        {
+          "id": "cost.sma_close_50",
+          "outputs": [
+            "value"
+          ],
+          "params": {
+            "period": 50
+          },
+          "requiredBars": 50,
+          "scope": "asset",
+          "source": "close",
+          "type": "SMA"
+        }
+      ],
+      "indicators": [
+        {
+          "id": "cost.sma_close_20",
+          "input": "close",
+          "min_bars_required": 20,
+          "outputs": [
+            "value"
+          ],
+          "params": {
+            "period": 20
+          },
+          "type": "SMA"
+        },
+        {
+          "id": "cost.sma_close_50",
+          "input": "close",
+          "min_bars_required": 50,
+          "outputs": [
+            "value"
+          ],
+          "params": {
+            "period": 50
+          },
+          "type": "SMA"
+        }
+      ],
+      "strategyDefinition": {
+        "id": "cost_strategy",
+        "risk": {
+          "positionSizePct": 0.95,
+          "stopLoss": {
+            "atrIndicatorRef": "",
+            "type": "none",
+            "value": 0.0
+          },
+          "takeProfit": {
+            "type": "none",
+            "value": 0.0
+          }
+        },
+        "runSettings": {
+          "edgeTrigger": true,
+          "maxTrades": 5000,
+          "warmupBars": 50
+        },
+        "signals": {
+          "exit": {
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "joinWithPrev": "AND",
+                    "left": {
+                      "kind": "series",
+                      "ref": "cost.sma_close_20.value"
+                    },
+                    "op": "<",
+                    "right": {
+                      "kind": "series",
+                      "ref": "cost.sma_close_50.value"
+                    }
+                  }
+                ],
+                "joinWithPrev": "OR"
+              }
+            ]
+          },
+          "longEntry": {
+            "groups": [
+              {
+                "conditions": [
+                  {
+                    "joinWithPrev": "AND",
+                    "left": {
+                      "kind": "series",
+                      "ref": "cost.sma_close_20.value"
+                    },
+                    "op": ">",
+                    "right": {
+                      "kind": "series",
+                      "ref": "cost.sma_close_50.value"
+                    }
+                  }
+                ],
+                "joinWithPrev": "OR"
+              }
+            ]
+          }
+        }
+      },
+      "ticker": "COST"
+    },
+    "nvda_strategy": {
+      "entry": {
+        "left": {
+          "ref": "sma_nvda"
+        },
+        "op": "GT",
+        "right": {
+          "ref": "sma50"
+        }
+      },
+      "execution": {
+        "edge_trigger": true,
+        "max_orders": 5000,
+        "position_size_pct": 0.95,
+        "warmup_bars": 60
+      },
+      "exit": {
+        "left": {
+          "ref": "sma_nvda"
+        },
+        "op": "LT",
+        "right": {
+          "ref": "sma50"
+        }
+      },
+      "indicators": [
+        {
+          "id": "sma_nvda",
+          "input": "close",
+          "params": {
+            "period": 20
+          },
+          "type": "SMA"
+        },
+        {
+          "id": "sma50",
+          "input": "close",
+          "params": {
+            "period": 50
+          },
+          "type": "SMA"
+        }
+      ]
+    },
+    "sma_cross": {
+      "entry": {
+        "a": {
+          "ref": "sma20"
+        },
+        "b": {
+          "ref": "sma50"
+        },
+        "op": "CROSSUP"
+      },
+      "execution": {
+        "edge_trigger": true,
+        "max_orders": 5000,
+        "position_size_pct": 0.95,
+        "warmup_bars": 60
+      },
+      "exit": {
+        "a": {
+          "ref": "sma20"
+        },
+        "b": {
+          "ref": "sma50"
+        },
+        "op": "CROSSDOWN"
+      },
+      "indicators": [
+        {
+          "id": "sma20",
+          "input": "close",
+          "params": {
+            "period": 20
+          },
+          "type": "SMA"
+        },
+        {
+          "id": "sma50",
+          "input": "close",
+          "params": {
+            "period": 50
+          },
+          "type": "SMA"
+        }
+      ]
+    }
+  },
+  "version": 1
+}
